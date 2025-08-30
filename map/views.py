@@ -21,19 +21,19 @@ def index(request):
     lat = location.lat
     lng = location.lng
     country = location.country
-    if lat == None or lng == None:
-        address.delete()
-        return HttpResponse('You address input is invalid')
-
     # Create Map Object
-    m = folium.Map(location=[19, -12], zoom_start=2)
+    if lat is not None and lng is not None:
+        m = folium.Map(location=[19, -12], zoom_start=2)
 
-    folium.Marker([lat, lng], tooltip='Click for more',
-                  popup=country).add_to(m)
-    # Get HTML Representation of Map Object
-    m = m._repr_html_()
-    context = {
-        'm': m,
-        'form': form,
-    }
-    return render(request, 'index.html', context)
+        folium.Marker([lat, lng], tooltip='Click for more',
+                      popup=country).add_to(m)
+        # Get HTML Representation of Map Object
+        m = m._repr_html_()
+        context = {
+            'm': m,
+            'form': form,
+        }
+        return render(request, 'index.html', context)
+
+    address.delete()
+    return HttpResponse('You address input is invalid')
